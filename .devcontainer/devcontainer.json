@@ -1,0 +1,22 @@
+{
+    "name": "os-pi",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.makefile-tools",
+
+                "ms-python.python",
+
+                "eamodio.gitlens",
+                "ms-vscode.hexeditor",
+                "MS-vsliveshare.vsliveshare",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
