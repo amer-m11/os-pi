@@ -1,16 +1,20 @@
-FROM debian:latest
+FROM debian:12
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
-# GNU C Compiler (gcc)
+# GCC and Binutils
 RUN apt-get install -y build-essential
 
-# Python interpreter
-RUN apt-get install -y python3 \
-    && apt-get install -y python3-pip \
-    && apt-get install -y python3-ipython
-RUN apt-get install -y pipenv
+# Cross Compiler Dependencies
+RUN apt-get install -y bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev
 
-# git
-RUN apt-get install -y git
+# Python
+RUN apt-get install -y python3 python3-pip python3-ipython pipenv
+
+# Other tools
+RUN apt-get install -y git wget
+
+# Add cross-compiler script
+ADD build-cross-compiler.sh /usr/local/bin/build-cross-compiler.sh
+RUN chmod +x /usr/local/bin/build-cross-compiler.sh
