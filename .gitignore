@@ -1,8 +1,9 @@
 
 .vscode
 
-
-*.d
+# kernel development
+*.img
+*.elf
 
 # Compiled Object files
 *.slo
