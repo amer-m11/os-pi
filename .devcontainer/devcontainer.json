@@ -10,10 +10,14 @@
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.makefile-tools",
 
+                "dan-c-underwood.arm",
+                "ZixuanWang.linkerscript",
+
                 "ms-python.python",
 
                 "eamodio.gitlens",
                 "ms-vscode.hexeditor",
+                "natqe.reload",
                 "MS-vsliveshare.vsliveshare",
                 "ms-azuretools.vscode-docker"
             ]

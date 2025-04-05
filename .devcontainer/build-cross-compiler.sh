@@ -7,7 +7,7 @@ BINUTILS_VERSION="2.38"
 GCC_VERSION="12.1.0"
 GDB_VERSION="12.1"
 export TARGET="aarch64-elf"  # Target for Raspberry Pi with ELF format
-export CC_HOME="$HOME/opt/cross"
+export CC_HOME="/opt/cross"
 mkdir -p $CC_HOME
 export PATH="$CC_HOME/bin:$PATH"
 

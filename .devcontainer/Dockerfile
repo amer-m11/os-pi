@@ -18,3 +18,5 @@ RUN apt-get install -y git wget
 # Add cross-compiler script
 ADD build-cross-compiler.sh /usr/local/bin/build-cross-compiler.sh
 RUN chmod +x /usr/local/bin/build-cross-compiler.sh
+
+ENV PATH="/opt/cross/bin:${PATH}"
