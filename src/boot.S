@@ -1,36 +1,24 @@
-// based on https://wiki.osdev.org/Raspberry_Pi_Bare_Bones
+#include "mm.h"
 
-// AArch64 mode
-
-// To keep this in the first portion of the binary.
 .section ".text.boot"
 
-// Make _start global.
 .globl _start
-
-    .org 0x80000
-// Entry point for the kernel. Registers:
-// x0 -> 32 bit pointer to DTB in memory (primary core only) / 0 (secondary cores)
-// x1 -> 0
-// x2 -> 0
-// x3 -> 0
-// x4 -> 32 bit kernel entry point, _start location
 _start:
-    // set stack before our code
-    ldr     x5, =_start
-    mov     sp, x5
+	mrs	x0, mpidr_el1		
+	and	x0, x0,#0xFF		// Check processor id
+	cbz	x0, master		// Hang for all non-primary CPU
+	b	proc_hang
 
-    // clear bss
-    ldr     x5, =__bss_start
-    ldr     w6, =__bss_size
-1:  cbz     w6, 2f
-    str     xzr, [x5], #8
-    sub     w6, w6, #1
-    cbnz    w6, 1b
-
-    // jump to C code, should not return
-2:  bl      kernel_main
-    // for failsafe, halt this core
-halt:
+proc_hang:
     wfe
-    b halt
+	b 	proc_hang
+
+master:
+	adr	x0, bss_begin
+	adr	x1, bss_end
+	sub	x1, x1, x0
+	bl 	memzero
+
+	mov	sp, #LOW_MEMORY 
+	bl	kernel_main
+	b 	proc_hang		// should never come here

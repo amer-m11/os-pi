@@ -5,6 +5,8 @@
 *.img
 *.elf
 
+*.d
+
 # Compiled Object files
 *.slo
 *.lo

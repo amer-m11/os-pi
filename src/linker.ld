@@ -1,45 +1,12 @@
-/* based on https://wiki.osdev.org/Raspberry_Pi_Bare_Bones */
-ENTRY(_start)
 
 SECTIONS
 {
-    /* Starts at LOADER_ADDR. */
-    . = 0x80000;
-    /* For AArch32, use . = 0x8000; */
-    __start = .;
-    __text_start = .;
-    .text :
-    {
-        KEEP(*(.text.boot))
-        *(.text)
-    }
-    . = ALIGN(4096); /* align to page size */
-    __text_end = .;
-
-    __rodata_start = .;
-    .rodata :
-    {
-        *(.rodata)
-    }
-    . = ALIGN(4096); /* align to page size */
-    __rodata_end = .;
-
-    __data_start = .;
-    .data :
-    {
-        *(.data)
-    }
-    . = ALIGN(4096); /* align to page size */
-    __data_end = .;
-
-    __bss_start = .;
-    .bss :
-    {
-        bss = .;
-        *(.bss)
-    }
-    . = ALIGN(4096); /* align to page size */
-    __bss_end = .;
-    __bss_size = __bss_end - __bss_start;
-    __end = .;
+    .text.boot : { *(.text.boot) }
+    .text :  { *(.text) }
+    .rodata : { *(.rodata) }
+    .data : { *(.data) }
+    . = ALIGN(0x8);
+    bss_begin = .;
+    .bss : { *(.bss*) } 
+    bss_end = .;
 }
