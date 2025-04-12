@@ -28,12 +28,12 @@ void uart_init() {
 }
 
 void uart_send(char c) {
-    while (REGS_AUX->mu_lsr & 0x20 == 0); // wait until fifth bit is set (ready to send)
+    while ((REGS_AUX->mu_lsr & 0x20) == 0); // wait until fifth bit is set (ready to send)
     REGS_AUX->mu_io = c;
 }
 
 char uart_recv() {
-    while (REGS_AUX->mu_lsr & 0x01 == 0); // wait until first bit is set (data available)
+    while ((REGS_AUX->mu_lsr & 0x01) == 0); // wait until first bit is set (data available)
     return REGS_AUX->mu_io & 0xFF; // return the received character (one byte)
 }
 
