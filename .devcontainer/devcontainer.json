@@ -22,7 +22,5 @@
                 "ms-azuretools.vscode-docker"
             ]
         }
-    },
-    
-    "postCreateCommand": "/usr/local/bin/build-cross-compiler.sh"
+    }
 }

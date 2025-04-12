@@ -4,7 +4,7 @@ RUN apt-get -y update
 RUN apt-get -y upgrade
 
 # GCC and Binutils
-RUN apt-get install -y build-essential
+RUN apt-get install -y build-essential gcc-aarch64-linux-gnu
 
 # Cross Compiler Dependencies
 RUN apt-get install -y bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev
