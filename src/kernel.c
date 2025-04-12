@@ -3,18 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-static uint32_t MMIO_BASE;
-
-// The MMIO area base address, depends on board type
-static inline void mmio_init(int raspi)
-{
-    switch (raspi) {
-        case 2:
-        case 3:  MMIO_BASE = 0x3F000000; break; // for raspi2 & 3
-        case 4:  MMIO_BASE = 0xFE000000; break; // for raspi4
-        default: MMIO_BASE = 0x20000000; break; // for raspi1, raspi zero etc.
-    }
-}
+static uint32_t MMIO_BASE = 0xFE000000;
 
 // Memory-Mapped I/O output
 static inline void mmio_write(uint32_t reg, uint32_t data)
@@ -81,9 +70,8 @@ volatile unsigned int  __attribute__((aligned(16))) mbox[9] = {
     9*4, 0, 0x38002, 12, 8, 2, 3000000, 0 ,0
 };
 
-void uart_init(int raspi)
+void uart_init()
 {
-	mmio_init(raspi);
 
 	// Disable UART0.
 	mmio_write(UART0_CR, 0x00000000);
@@ -110,15 +98,15 @@ void uart_init(int raspi)
 
 	// For Raspi3 and 4 the UART_CLOCK is system-clock dependent by default.
 	// Set it to 3Mhz so that we can consistently set the baud rate
-	if (raspi >= 3) {
-		// UART_CLOCK = 30000000;
-		unsigned int r = (((unsigned int)(&mbox) & ~0xF) | 8);
-		// wait until we can talk to the VC
-		while ( mmio_read(MBOX_STATUS) & 0x80000000 ) { }
-		// send our message to property channel and wait for the response
-		mmio_write(MBOX_WRITE, r);
-		while ( (mmio_read(MBOX_STATUS) & 0x40000000) || mmio_read(MBOX_READ) != r ) { }
-	}
+
+	// UART_CLOCK = 30000000;
+	unsigned int r = (((unsigned int)(&mbox) & ~0xF) | 8);
+	// wait until we can talk to the VC
+	while ( mmio_read(MBOX_STATUS) & 0x80000000 ) { }
+	// send our message to property channel and wait for the response
+	mmio_write(MBOX_WRITE, r);
+	while ( (mmio_read(MBOX_STATUS) & 0x40000000) || mmio_read(MBOX_READ) != r ) { }
+	
 
 	// Divider = 3000000 / (16 * 115200) = 1.627 = ~1.
 	mmio_write(UART0_IBRD, 1);
@@ -160,18 +148,14 @@ void uart_puts(const char* str)
 extern "C" /* Use C linkage for kernel_main. */
 #endif
 
-#ifdef AARCH32
-// arguments for AArch32
-void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
-#else
+
 // arguments for AArch64
 void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3)
-#endif
 {
-	// initialize UART for Raspi4
-	uart_init(4);
+
+	uart_init();
 	uart_puts("Hello, kernel World!\r\n");
 
-	while (1);
-		// uart_putc(uart_getc());
+	while (1)
+		uart_putc(uart_getc());
 }

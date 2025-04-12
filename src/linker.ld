@@ -5,7 +5,7 @@ SECTIONS
 {
     /* Starts at LOADER_ADDR. */
     . = 0x80000;
-    /* For AArch42, use . = 0x8000; */
+    /* For AArch32, use . = 0x8000; */
     __start = .;
     __text_start = .;
     .text :
