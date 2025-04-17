@@ -11,6 +11,11 @@
 
 #ifndef __ASSEMBLER__
 
+/**
+ * Zeroes out a block of memory.
+ * @param src The starting address of the memory block to zero out.
+ * @param n The length of the memory block to zero out (in bytes).
+ */
 void memzero(unsigned long src, unsigned long n);
 
 #endif

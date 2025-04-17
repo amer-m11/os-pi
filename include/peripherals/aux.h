@@ -4,8 +4,11 @@
 
 #include "peripherals/base.h"
 
-// see Chapter 2. Auxiliaries in https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf
-struct AuxRegs {
+/**
+ * see Chapter 2. Auxiliaries in https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf
+ */
+struct AuxRegs
+{
     volatile uint32_t irq;          // 0x00 Auxiliary Interrupt status
     volatile uint32_t enables;      // 0x04 Auxiliary enables
     volatile uint32_t reserved[14]; // 0x08 - 0x40
@@ -23,4 +26,7 @@ struct AuxRegs {
     // ... SPI is currently not implemented
 };
 
-#define REGS_AUX ((struct AuxRegs *) (PBASE + 0x00215000))
+/**
+ * contains the addresses of all auxiliary registers.
+ */
+#define REGS_AUX ((struct AuxRegs *)(PBASE + 0x00215000))
