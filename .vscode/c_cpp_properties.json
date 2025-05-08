@@ -8,8 +8,7 @@
             ],
             "defines": [],
             "compilerPath": "/usr/bin/aarch64-linux-gnu-gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
+            "cStandard": "c17",
             "intelliSenseMode": "linux-gcc-arm64"
         }
     ],
