@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-#include "peripherals/base.h"
+#include "regs/peripherals/base.h"
 
 /**
  * see Chapter 2. Auxiliaries in https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf

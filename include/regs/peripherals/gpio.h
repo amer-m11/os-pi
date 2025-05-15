@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-#include "peripherals/base.h"
+#include "regs/peripherals/base.h"
 
 struct GpioPinData
 {

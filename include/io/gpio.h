@@ -1,6 +1,6 @@
 #pragma once
 
-#include "peripherals/gpio.h"
+#include "regs/peripherals/gpio.h"
 
 /**
  * Each FSEL register controls 10 GPIO pins (0:2 bit for first pin, 3:5 for

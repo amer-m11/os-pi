@@ -1,6 +1,6 @@
-#include "mini_uart.h"
-#include "gpio.h"
-#include "peripherals/auxiliaries.h"
+#include "io/mini_uart.h"
+#include "io/gpio.h"
+#include "regs/peripherals/auxiliaries.h"
 #include "utils.h"
 
 #define TXD 14
