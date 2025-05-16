@@ -1,6 +1,6 @@
 #include "common.h"
+#include "el.h"
 #include "io/mini_uart.h"
-#include "utils/el.h"
 #include "utils/printf.h"
 
 void putc(void *p, char c)
@@ -21,7 +21,12 @@ void kernel_main(void)
     init_printf(0, putc);
     uart_send_string("done\r\n");
 
-    printf("Kernel running on exception level: %d \r\n", get_current_el());
+    configure_el2();
+    configure_el1();
+    printf("Kernel running on exception level: %d \r\n", get_current_el()); // EL2
+    printf("Switching to EL1...\r\n");
+    switch_to_el1();
+    printf("Kernel running on exception level: %d \r\n", get_current_el()); // EL1
 
     uart_send_string("\r\n");
     uart_send_string("\r\n");
