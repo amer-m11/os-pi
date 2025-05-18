@@ -3,6 +3,7 @@
 #include "exceptions/daif.h"
 #include "exceptions/vectors.h"
 #include "io/mini_uart.h"
+#include "regs/peripherals/irq.h"
 #include "utils/debug.h"
 #include "utils/printf.h"
 
@@ -97,7 +98,7 @@ void kernel_main(void)
     printf("content: 0x%x <- confirm = d2800210\r\n", *(get_vectors_adr() + 16 * 15));
     printf("----------------------- end of vector table debug -----------------------\r\n\r\n\r\n");
 
-    // ----------------------- interrupts -----------------------
+    // ----------------------- interrupts cpu specific -----------------------
 
     printf("vector base register: 0x%x\r\n", get_vector_base_register());
     printf("DAIF register: 0x%x\r\n", get_daif_register());
@@ -107,6 +108,12 @@ void kernel_main(void)
     printf("vector base register: 0x%x <- confirm = 0x%x\r\n", get_vector_base_register(),
            get_vectors_adr());
     printf("DAIF register: 0x%x <- confirm = 0x140\r\n", get_daif_register());
+    printf("\r\n\r\n");
+
+    // ----------------------- interrupts pi board specific -----------------------
+    printf("irq0_pending_0 addr: 0x%x <- confirm = 0xfe00b200\r\n", &REGS_IRQ->irq0_pending_0);
+    printf("irq0_enable_0 addr: 0x%x <- confirm = 0xfe00b200\r\n", &REGS_IRQ->irq0_enable_0);
+    printf("AUX_IRQ : 0x%x <- confirm = 0x20000000\r\n", AUX_IRQ);
     printf("\r\n\r\n");
 
     printf("All given input will be mirrored:\r\n");
