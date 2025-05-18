@@ -1,5 +1,7 @@
 #include "common.h"
 #include "el.h"
+#include "exceptions/daif.h"
+#include "exceptions/vectors.h"
 #include "io/mini_uart.h"
 #include "utils/debug.h"
 #include "utils/printf.h"
@@ -56,6 +58,56 @@ void kernel_main(void)
     set_x16(0);
     printf("x16: 0x%x <- confirm = 0x0\r\n", get_x16());
     uart_send_string("\r\n\r\n");
+
+    // ----------------------- vector table -----------------------
+
+    printf("----------------------- start of vector table debug -----------------------\r\n");
+    printf("vector table location: 0x%x\r\n", get_vectors_adr());
+    printf("vbar + 0x80*0, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 0));
+    printf("content: 0x%x <- confirm = d2800030\r\n", *(get_vectors_adr() + 16 * 0));
+    printf("vbar + 0x80*1, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 1));
+    printf("content: 0x%x <- confirm = d2800050\r\n", *(get_vectors_adr() + 16 * 1));
+    printf("vbar + 0x80*2, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 2));
+    printf("content: 0x%x <- confirm = d2800070\r\n", *(get_vectors_adr() + 16 * 2));
+    printf("vbar + 0x80*3, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 3));
+    printf("content: 0x%x <- confirm = d2800090\r\n", *(get_vectors_adr() + 16 * 3));
+    printf("vbar + 0x80*4, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 4));
+    printf("content: 0x%x <- confirm = d28000b0\r\n", *(get_vectors_adr() + 16 * 4));
+    printf("vbar + 0x80*5, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 5));
+    printf("content: 0x%x <- confirm = d28000d0\r\n", *(get_vectors_adr() + 16 * 5));
+    printf("vbar + 0x80*6, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 6));
+    printf("content: 0x%x <- confirm = d28000f0\r\n", *(get_vectors_adr() + 16 * 6));
+    printf("vbar + 0x80*7, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 7));
+    printf("content: 0x%x <- confirm = d2800110\r\n", *(get_vectors_adr() + 16 * 7));
+    printf("vbar + 0x80*8, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 8));
+    printf("content: 0x%x <- confirm = d2800130\r\n", *(get_vectors_adr() + 16 * 8));
+    printf("vbar + 0x80*9, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 9));
+    printf("content: 0x%x <- confirm = d2800150\r\n", *(get_vectors_adr() + 16 * 9));
+    printf("vbar + 0x80*10, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 10));
+    printf("content: 0x%x <- confirm = d2800170\r\n", *(get_vectors_adr() + 16 * 10));
+    printf("vbar + 0x80*11, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 11));
+    printf("content: 0x%x <- confirm = d2800190\r\n", *(get_vectors_adr() + 16 * 11));
+    printf("vbar + 0x80*12, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 12));
+    printf("content: 0x%x <- confirm = d28001b0\r\n", *(get_vectors_adr() + 16 * 12));
+    printf("vbar + 0x80*13, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 13));
+    printf("content: 0x%x <- confirm = d28001d0\r\n", *(get_vectors_adr() + 16 * 13));
+    printf("vbar + 0x80*14, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 14));
+    printf("content: 0x%x <- confirm = d28001f0\r\n", *(get_vectors_adr() + 16 * 14));
+    printf("vbar + 0x80*15, address: %x, content: %x\r\n", (get_vectors_adr() + 16 * 15));
+    printf("content: 0x%x <- confirm = d2800210\r\n", *(get_vectors_adr() + 16 * 15));
+    printf("----------------------- end of vector table debug -----------------------\r\n\r\n\r\n");
+
+    // ----------------------- interrupts -----------------------
+
+    printf("vector base register: 0x%x\r\n", get_vector_base_register());
+    printf("DAIF register: 0x%x\r\n", get_daif_register());
+    printf("Initializing exception vectors and enabling IRQ...\r\n");
+    init_exception_vectors_el1();
+    enable_irq();
+    printf("vector base register: 0x%x <- confirm = 0x%x\r\n", get_vector_base_register(),
+           get_vectors_adr());
+    printf("DAIF register: 0x%x <- confirm = 0x140\r\n", get_daif_register());
+    printf("\r\n\r\n");
 
     printf("All given input will be mirrored:\r\n");
 
