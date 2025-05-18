@@ -17,13 +17,21 @@
 // TODO: enable MMU once it is implemented
 #define SCTLR_VALUE_MMU_DISABLED                                                                   \
     (SCTLR_RESERVED | SCTLR_EE_LITTLE_ENDIAN | SCTLR_I_CACHE_DISABLED | SCTLR_D_CACHE_DISABLED |   \
-     SCTLR_MMU_DISABLED)
+     SCTLR_MMU_DISABLED) // 0011 0000 1101 0000 0000 1000 0000 0000 = 0x30d00800
 
 // ----------------- HCR_EL2, Hypervisor Configuration Register (EL2) -----------------
 // page D24-7579
 
 #define HCR_RW (1 << 31)
-#define HCR_VALUE HCR_RW
+#define HCR_VALUE HCR_RW // 0x80000000
+
+// ----------------- SCR_EL3, Secure Configuration Register (EL3) -----------------
+// section D24.2.163, page: D24-8178
+
+#define SCR_RESERVED (3 << 4)
+#define SCR_RW (1 << 10)
+#define SCR_NS (1 << 0)
+#define SCR_VALUE (SCR_RESERVED | SCR_RW | SCR_NS) // 0x431
 
 // ----------------- SPSR_EL2/3, Saved Program Status Register (EL3) -----------------
 // page C5-890/C5-901
@@ -35,4 +43,5 @@
 
 #define SPSR_MASK_ALL (7 << 6)
 #define SPSR_EL1h (5 << 0)
-#define SPSR_VALUE (SPSR_MASK_ALL | SPSR_EL1h)
+#define SPSR_EL2h (9 << 0)
+#define SPSR_VALUE (SPSR_MASK_ALL | SPSR_EL1h) // 0x1C5

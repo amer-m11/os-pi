@@ -27,20 +27,34 @@ void kernel_main(void)
     uart_send_string("done\r\n\r\n\r\n");
 
     // ----------------------- exception levels configuration -----------------------
-    configure_el2();
+    printf("Kernel running on exception level: %d <- confirm = 3\r\n", get_current_el());
+    printf("System Control Register (SCTLR_EL1): 0x%x\r\n", get_sctlr_el1());
+    printf("Hypervisor Configuration Register (HCR_EL2): 0x%x\r\n", get_hcr_el2());
+    printf("Secure Configuration Register (SCR_EL3): 0x%x\r\n", get_scr_el3());
+    printf("Saved Program Status Register (SPSR_EL1): 0x%x\r\n", get_spsr_el1());
+    printf("Configuring exception levels...\r\n");
     configure_el1();
-    printf("Kernel running on exception level: %d \r\n", get_current_el()); // EL2
+    configure_el2();
+    configure_el3();
+    printf("System Control Register (SCTLR_EL1): 0x%x <- confirm = 0x30d00800 or 0x30d00801\r\n",
+           get_sctlr_el1());
+    printf("Hypervisor Configuration Register (HCR_EL2): 0x%x <- confirm = 0x80000000\r\n",
+           get_hcr_el2());
+    printf("Secure Configuration Register (SCR_EL3): 0x%x <- confirm = 0x431\r\n", get_scr_el3());
     printf("Switching to EL1...\r\n");
-    switch_to_el1();
-    printf("Kernel running on exception level: %d \r\n", get_current_el()); // EL1
+    switch_to_el1_from_el3();
+    printf("Kernel running on exception level: %d <- confirm = 1\r\n", get_current_el()); // EL1
+    printf("Saved Program Status Register (SPSR_EL1): 0x%x <- TODO: confirm that 0x10 is the "
+           "correct value\r\n",
+           get_spsr_el1());
     uart_send_string("\r\n\r\n");
 
     // ----------------------- x16 -----------------------
     // set x16 to zero for later use as a debugging register
     // NOTE: x16 is usually used to hold the system call number
-    printf("x16: %x\r\n", get_x16());
+    printf("x16: 0x%x\r\n", get_x16());
     set_x16(0);
-    printf("x16: %x <- confirm that the value is zero\r\n", get_x16());
+    printf("x16: 0x%x <- confirm = 0x0\r\n", get_x16());
     uart_send_string("\r\n\r\n");
 
     printf("All given input will be mirrored:\r\n");
