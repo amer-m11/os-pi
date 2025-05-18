@@ -3,6 +3,7 @@
 # kernel development
 *.img
 *.elf
+*.bin
 
 *.d
 
