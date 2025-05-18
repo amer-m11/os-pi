@@ -8,7 +8,7 @@ get_current_el:
 
 
 .globl configure_el2
-configure_el2:       
+configure_el2:
     ldr    x0, =HCR_VALUE
     msr    hcr_el2, x0
     ret
@@ -26,7 +26,7 @@ switch_to_el1:
     ldr     x0, =SPSR_VALUE
     msr     spsr_el2, x0
 
-    adr     x0, el1_entry      
+    adr     x0, el1_entry
     msr     elr_el2, x0
 
     // save return address and stack pointer
@@ -42,5 +42,3 @@ el1_entry:
     mov    lr, x1
     mov    sp, x2
     ret
-
-
