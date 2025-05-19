@@ -17,7 +17,7 @@ void uart_init()
 
     REGS_AUX->enables = 1; // set first bit to 1
     REGS_AUX->mu_cntl = 0;
-    REGS_AUX->mu_ier = 0;
+    REGS_AUX->mu_ier = 2; // enable receive interrupts
     REGS_AUX->mu_lcr = 3; // 8 bit mode
     REGS_AUX->mu_mcr = 0;
     REGS_AUX->mu_baud = 541; // = 115200 @ 500 MHz
