@@ -3,7 +3,7 @@ ARMGNU ?= aarch64-linux-gnu
 
 # remove -mgeneral-regs-only in case NEON registers are needed (context switch)
 COPS = -Wall -nostdlib -nostartfiles -ffreestanding -Iinclude -mgeneral-regs-only
-ASMOPS = -Iinclude 
+ASMOPS = -Iinclude -Isrc
 
 BUILD_DIR = build
 SRC_DIR = src
