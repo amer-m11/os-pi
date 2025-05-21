@@ -1,10 +1,12 @@
 #include "common.h"
+#include "drivers/timer.h"
 #include "el.h"
 #include "interrupt/daif.h"
 #include "interrupt/handler.h"
 #include "interrupt/vectors.h"
 #include "io/mini_uart.h"
 #include "regs/peripherals/irq.h"
+#include "regs/peripherals/timer.h"
 #include "utils.h"
 #include "utils/debug.h"
 #include "utils/printf.h"
@@ -13,6 +15,22 @@ void putc(void *pointer, char char_to_send)
 {
     (void)pointer; // Ignore unused parameter
     uart_send(char_to_send);
+}
+
+void uart_echo(void)
+{
+    printf("UART echo mode activated. Input will be echoed back:\r\n");
+    while (1)
+    {
+        char received_char = uart_recv();
+        if (received_char == '\r')
+        {
+            uart_send('\r');
+            uart_send('\n');
+            continue;
+        }
+        uart_send(received_char);
+    }
 }
 
 void kernel_main(void)
@@ -82,16 +100,13 @@ void kernel_main(void)
     printf("AUX_IRQ : 0x%x <- confirm = 0x20000000\r\n", AUX_IRQ);
     printf("enabling interrupt controller...\r\n");
     enable_interrupt_controller();
-    printf("irq0_enable_0: 0x%x <- confirm = 0x20000000\r\n", REGS_IRQ->irq0_enable_0);
+    //     printf("irq0_enable_0: 0x%x <- confirm = 0x20000002\r\n", REGS_IRQ->irq0_enable_0);
+    printf("irq0_enable_0: 0x%x <- confirm = 0x2\r\n", REGS_IRQ->irq0_enable_0);
+    timer1_init(); // TODO: test and adjust interval time for timer interrupt
 
     printf("\r\n\r\n");
 
     // ######################## end of setup ########################
 
-    printf("All given input will be mirrored:\r\n");
-
-    while (1)
-    {
-        // delay(10000000);
-    }
+    uart_echo();
 }

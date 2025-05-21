@@ -1,6 +1,7 @@
 
 #include "interrupt/handler.h"
 #include "common.h"
+#include "drivers/timer.h"
 #include "io/mini_uart.h"
 #include "regs/peripherals/auxiliaries.h"
 #include "utils/printf.h"
@@ -9,8 +10,9 @@
 
 void enable_interrupt_controller()
 {
-    // only activates the aux interrupt
-    REGS_IRQ->irq0_enable_0 = AUX_IRQ;
+    // TODO: enable after figuring out the issue with AUX_IRQ (see below)
+    // REGS_IRQ->irq0_enable_0 = AUX_IRQ | TIMER_1_IRQ;
+    REGS_IRQ->irq0_enable_0 = TIMER_1_IRQ;
 }
 
 const char *const entry_error_messages[] = {
@@ -55,9 +57,14 @@ void handle_irq(void)
                 uart_send(received_char);
             }
         }
+        else if (irq & TIMER_1_IRQ)
+        {
+            irq &= ~TIMER_1_IRQ;
+            timer1_handle_interrupt();
+        }
         else
         {
-            printf("unsupported interrupt. pending register: 0x%x\r\n", irq);
+            printf("unsupported interrupt. irq pending register: 0x%x\r\n", irq);
             while (1)
             {
                 // hang

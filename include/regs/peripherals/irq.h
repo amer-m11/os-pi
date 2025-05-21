@@ -30,6 +30,10 @@ struct irq_regs
 enum vc_irqs
 {
     AUX_IRQ = (1 << 29),
+    TIMER_0_IRQ = (1 << 0),
+    TIMER_1_IRQ = (1 << 1),
+    TIMER_2_IRQ = (1 << 2),
+    TIMER_3_IRQ = (1 << 3),
 };
 
 #define REGS_IRQ ((struct irq_regs *)(PBASE + 0x0000B200))
