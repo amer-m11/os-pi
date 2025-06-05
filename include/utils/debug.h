@@ -4,5 +4,6 @@
 
 uint64_t get_x16(void);
 void set_x16(uint64_t);
+uint64_t get_sp(void);
 
 #endif

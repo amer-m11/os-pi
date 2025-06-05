@@ -5,6 +5,7 @@
 #include "interrupt/handler.h"
 #include "interrupt/vectors.h"
 #include "io/mini_uart.h"
+#include "mm.h"
 #include "regs/peripherals/irq.h"
 #include "regs/peripherals/timer.h"
 #include "utils.h"
@@ -31,6 +32,27 @@ void uart_echo(void)
         }
         uart_send(received_char);
     }
+}
+
+void test_memory_allocation(void)
+{
+    printf("testing primitive memory allocation...\r\n");
+    printf("Low memory address: 0x%x\r\n", LOW_MEMORY);
+    printf("High memory address: 0x%x\r\n", HIGH_MEMORY);
+    printf("current stack pointer: 0x%x\r\n", get_sp());
+    uint64_t page1 = allocate_page();
+    printf("Allocated first page at address: 0x%x\r\n", page1);
+    uint64_t page2 = allocate_page();
+    printf("Allocated second page at address: 0x%x\r\n", page2);
+    uint64_t page3 = allocate_page();
+    printf("Allocated third page at address: 0x%x\r\n", page3);
+    free_page(page2);
+    printf("Freed second page at address: 0x%x\r\n", page2);
+    uint64_t page4 = allocate_page();
+    printf("Allocated new page at address: 0x%x <- confirm = 0x%x\r\n", page4, page2);
+    uint64_t page5 = allocate_page();
+    printf("Allocated forth page at address: 0x%x\r\n", page5);
+    printf("current stack pointer: 0x%x\r\n", get_sp());
 }
 
 void kernel_main(void)
@@ -107,6 +129,7 @@ void kernel_main(void)
     printf("\r\n\r\n");
 
     // ######################## end of setup ########################
+    test_memory_allocation();
 
     uart_echo();
 }
