@@ -28,5 +28,6 @@ void memzero(uint64_t src, uint64_t n);
 uint64_t allocate_page(void);
 /** primitive page allocation. TODO: update when MMU is enabled */
 void free_page(uint64_t page);
+void print_memory_map(void);
 
 #endif
