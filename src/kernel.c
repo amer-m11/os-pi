@@ -38,85 +38,48 @@ void uart_echo(void)
 
 void test_memory_allocation(void)
 {
-    printf("\n=== Initial Memory State ===\n");
-    print_memory_map();
-    printf("current stack pointer: 0x%x\n", get_sp());
-
-    printf("\n=== Allocating first page ===\n");
+    printf("testing primitive memory allocation...\r\n");
+    printf("Low memory address: 0x%x\r\n", LOW_MEMORY);
+    printf("High memory address: 0x%x\r\n", HIGH_MEMORY);
+    printf("current stack pointer: 0x%x\r\n", get_sp());
     uint64_t page1 = allocate_page();
-    printf("Allocated first page at address: 0x%x\n", page1);
-    print_memory_map();
-
-    printf("\n=== Allocating second page ===\n");
+    printf("Allocated first page at address: 0x%x\r\n", page1);
     uint64_t page2 = allocate_page();
-    printf("Allocated second page at address: 0x%x\n", page2);
-    print_memory_map();
-
-    printf("\n=== Allocating third page ===\n");
+    printf("Allocated second page at address: 0x%x\r\n", page2);
     uint64_t page3 = allocate_page();
-    printf("Allocated third page at address: 0x%x\n", page3);
-    print_memory_map();
-
-    printf("\n=== Freeing second page ===\n");
+    printf("Allocated third page at address: 0x%x\r\n", page3);
     free_page(page2);
-    printf("Freed second page at address: 0x%x\n", page2);
-    print_memory_map();
-
-    printf("\n=== Allocating new page (should reuse freed page) ===\n");
+    printf("Freed second page at address: 0x%x\r\n", page2);
     uint64_t page4 = allocate_page();
-    printf("Allocated new page at address: 0x%x (expected 0x%x)\n", page4, page2);
-    print_memory_map();
-
-    printf("\n=== Allocating fourth page ===\n");
+    printf("Allocated new page at address: 0x%x <- confirm = 0x%x\r\n", page4, page2);
     uint64_t page5 = allocate_page();
-    printf("Allocated fourth page at address: 0x%x\n", page5);
-    print_memory_map();
-
-    printf("\n=== Final Memory State ===\n");
-    printf("current stack pointer: 0x%x\n", get_sp());
-    print_memory_map();
-}
-
-void print_task_info(task_struct *task, int index)
-{
-    if (!task)
-    {
-        printf("  tasks[%d]: NULL\n", index);
-        return;
-    }
-
-    printf("  tasks[%d] @ 0x%x:\n", index, (uint64_t)task);
-    printf("    state: %d\n", task->state);
-    printf("    priority: %d\n", task->priority);
-    printf("    remaining_time: %d\n", task->remaining_time);
-    printf("    preempt: %d\n", task->disable_preemption);
-    printf("    stack: 0x%x\n", task->cpu_context.sp);
-    printf("    pc: 0x%x\n", task->cpu_context.pc);
+    printf("Allocated forth page at address: 0x%x\r\n", page5);
+    printf("current stack pointer: 0x%x\r\n", get_sp());
 }
 
 void test_scheduler_setup(void)
 {
-    printf("\n=== Scheduler Initialization ===\n");
-
-    // Print scheduler metadata
-    printf("Scheduler @ 0x%x:\n", (uint64_t)SCHEDULER);
-    printf("  current_task @ 0x%x\n", (uint64_t)SCHEDULER->current_task);
-    printf("  nr_tasks: %d\n", SCHEDULER->nr_tasks);
-
-    // Print all tasks in the array
-    printf("\nTask List:\n");
-    for (int i = 0; i < MAX_TASKS_NUMBER; i++)
-    {
-        print_task_info(SCHEDULER->tasks[i], i);
-    }
-
-    // Print current task details
-    if (SCHEDULER->current_task)
-    {
-        printf("\nCurrent Task Details:\n");
-        print_task_info(SCHEDULER->current_task, -1);
-    }
+    printf("Testing scheduler setup...\r\n");
+    printf("current task address: 0x%x\r\n", (uint64_t)&SCHEDULER->current_task);
+    printf("Current task state: %x\r\n", SCHEDULER->current_task->state);
+    printf("Current task remaining time: %x\r\n", SCHEDULER->current_task->remaining_time);
+    printf("Current task priority: %x\r\n", SCHEDULER->current_task->priority);
+    printf("Current task disable preemption: %x\r\n", SCHEDULER->current_task->disable_preemption);
+    printf("Number of tasks in scheduler: %x\r\n", SCHEDULER->nr_tasks);
+    printf("\r\n\r\n");
+    printf("tasks[0] address: 0x%x\r\n", (uint64_t)&SCHEDULER->tasks[0]->cpu_context);
+    printf("tasks[0] state: %x\r\n", SCHEDULER->tasks[0]->state);
+    printf("tasks[0] remaining time: %x\r\n", SCHEDULER->tasks[0]->remaining_time);
+    printf("tasks[0] priority: %x\r\n", SCHEDULER->tasks[0]->priority);
+    printf("tasks[0] disable preemption: %x\r\n", SCHEDULER->tasks[0]->disable_preemption);
+    printf("\r\n\r\n");
+    printf("tasks[1] address: 0x%x\r\n", (uint64_t)&SCHEDULER->tasks[1]->cpu_context);
+    printf("tasks[1] state: %x\r\n", SCHEDULER->tasks[1]->state);
+    printf("tasks[1] remaining time: %x\r\n", SCHEDULER->tasks[1]->remaining_time);
+    printf("tasks[1] priority: %x\r\n", SCHEDULER->tasks[1]->priority);
+    printf("tasks[1] disable preemption: %x\r\n", SCHEDULER->tasks[1]->disable_preemption);
 }
+
 void kernel_main(void)
 {
     // ----------------------- first alive signal -----------------------

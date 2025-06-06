@@ -1,7 +1,5 @@
 #include "mm.h"
 #include "common.h"
-#include "utils/debug.h"
-#include "utils/printf.h"
 
 static uint16_t mem_map[PAGING_PAGES] = {
     0,
@@ -32,25 +30,4 @@ void free_page(uint64_t page)
     {
         mem_map[index] = 0; // free
     }
-}
-
-void print_memory_map(void)
-{
-    printf("\nMemory Map Summary:\n");
-    printf("Range: 0x%x-0x%x | Page Size: %dKB | Total Pages: %d\n", LOW_MEMORY, HIGH_MEMORY,
-           PAGE_SIZE / 1024, PAGING_PAGES);
-
-    printf("\nAllocated Pages:\n");
-    int allocated = 0;
-    for (uint32_t i = 0; i < PAGING_PAGES; i++)
-    {
-        if (mem_map[i])
-        {
-            printf("  Page %4d: 0x%x\n", i, LOW_MEMORY + (i * PAGE_SIZE));
-            allocated++;
-        }
-    }
-
-    printf("\nStatus: %d/%d pages allocated (%d%%)\n", allocated, PAGING_PAGES,
-           (allocated * 100) / PAGING_PAGES);
 }
