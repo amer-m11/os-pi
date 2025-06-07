@@ -9,14 +9,18 @@
 
 typedef struct
 {
-    task_struct **tasks;
+    task_struct *tasks[MAX_TASKS_NUMBER];
     task_struct *current_task;
-    uint64_t nr_tasks; // number of tasks currently in the scheduler
+    uint64_t nr_tasks; /* number of tasks currently in the scheduler */
 } scheduler_struct;
 
-extern task_struct init_task;
-extern scheduler_struct *SCHEDULER;
+// TODO: investigate why using the extern key word results in weird behavior
+// extern task_struct init_task;
+// extern scheduler_struct *scheduler;
 
+task_struct *get_init_task(void);
+scheduler_struct *get_schedular(void);
+void init_scheduler(void);
 void preempt_disable(void);
 void preempt_enable(void);
 void schedule_tail(void);

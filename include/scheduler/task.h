@@ -24,6 +24,7 @@ typedef struct
     struct cpu_context cpu_context;
     uint64_t state;
     uint64_t remaining_time;
-    uint64_t priority; /* currently, the priority is the time the task should be running for */
+    uint64_t
+        priority; /* currently, the priority is the time the tasks_array should be running for */
     uint64_t disable_preemption; /* if non-zero preemption is not allowed */
 } task_struct;

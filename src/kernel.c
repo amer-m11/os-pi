@@ -10,6 +10,7 @@
 #include "regs/peripherals/timer.h"
 #include "scheduler/sched.h"
 #include "scheduler/task.h"
+#include "tests/sched_test.h"
 #include "utils.h"
 #include "utils/debug.h"
 #include "utils/printf.h"
@@ -55,29 +56,6 @@ void test_memory_allocation(void)
     uint64_t page5 = allocate_page();
     printf("Allocated forth page at address: 0x%x\r\n", page5);
     printf("current stack pointer: 0x%x\r\n", get_sp());
-}
-
-void test_scheduler_setup(void)
-{
-    printf("Testing scheduler setup...\r\n");
-    printf("current task address: 0x%x\r\n", (uint64_t)&SCHEDULER->current_task);
-    printf("Current task state: %x\r\n", SCHEDULER->current_task->state);
-    printf("Current task remaining time: %x\r\n", SCHEDULER->current_task->remaining_time);
-    printf("Current task priority: %x\r\n", SCHEDULER->current_task->priority);
-    printf("Current task disable preemption: %x\r\n", SCHEDULER->current_task->disable_preemption);
-    printf("Number of tasks in scheduler: %x\r\n", SCHEDULER->nr_tasks);
-    printf("\r\n\r\n");
-    printf("tasks[0] address: 0x%x\r\n", (uint64_t)&SCHEDULER->tasks[0]->cpu_context);
-    printf("tasks[0] state: %x\r\n", SCHEDULER->tasks[0]->state);
-    printf("tasks[0] remaining time: %x\r\n", SCHEDULER->tasks[0]->remaining_time);
-    printf("tasks[0] priority: %x\r\n", SCHEDULER->tasks[0]->priority);
-    printf("tasks[0] disable preemption: %x\r\n", SCHEDULER->tasks[0]->disable_preemption);
-    printf("\r\n\r\n");
-    printf("tasks[1] address: 0x%x\r\n", (uint64_t)&SCHEDULER->tasks[1]->cpu_context);
-    printf("tasks[1] state: %x\r\n", SCHEDULER->tasks[1]->state);
-    printf("tasks[1] remaining time: %x\r\n", SCHEDULER->tasks[1]->remaining_time);
-    printf("tasks[1] priority: %x\r\n", SCHEDULER->tasks[1]->priority);
-    printf("tasks[1] disable preemption: %x\r\n", SCHEDULER->tasks[1]->disable_preemption);
 }
 
 void kernel_main(void)
@@ -156,7 +134,8 @@ void kernel_main(void)
     // ######################## end of setup ########################
     test_memory_allocation();
     printf("\r\n\r\n");
-    test_scheduler_setup();
+    init_scheduler();
+    test_scheduler();
     printf("\r\n\r\n");
 
     uart_echo();

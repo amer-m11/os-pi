@@ -2,29 +2,36 @@
 #include "mm.h"
 #include "scheduler/task.h"
 
-// task_struct init_task = {
-//     .cpu_context = {0}, .state = 0, .remaining_time = 0, .priority = 1, .disable_preemption = 0};
 task_struct init_task = INIT_TASK;
-task_struct *task[MAX_TASKS_NUMBER] = {
-    &(init_task),
-};
 
-scheduler_struct sched = (scheduler_struct){
-    .tasks = task,
-    .current_task = &(init_task),
-    .nr_tasks = 1,
-};
+int64_t scheduler_space[1024];
+scheduler_struct *scheduler = (scheduler_struct *)scheduler_space;
 
-scheduler_struct *SCHEDULER = &sched;
+task_struct *get_init_task(void)
+{
+    return &init_task;
+}
+
+scheduler_struct *get_schedular(void)
+{
+    return scheduler;
+}
+
+void init_scheduler(void)
+{
+    scheduler->tasks[0] = &init_task;
+    scheduler->current_task = &init_task;
+    scheduler->nr_tasks = 1;
+}
 
 void preempt_disable(void)
 {
-    SCHEDULER->current_task->disable_preemption = 1;
+    scheduler->current_task->disable_preemption = 1;
 }
 
 void preempt_enable(void)
 {
-    SCHEDULER->current_task->disable_preemption = 0;
+    scheduler->current_task->disable_preemption = 0;
 }
 
 void schedule_tail(void)
@@ -50,8 +57,8 @@ uint32_t fork(uint64_t function, uint64_t priority, uint64_t arg)
     page_start->cpu_context.x20 = arg;
     page_start->cpu_context.pc = (uint64_t)ret_from_fork;
     page_start->cpu_context.sp = (unsigned long)page_start + PAGE_SIZE - 16;
-    uint64_t pid = SCHEDULER->nr_tasks++;
-    SCHEDULER->tasks[pid] = page_start;
+    uint64_t pid = scheduler->nr_tasks++;
+    scheduler->tasks[pid] = page_start;
     preempt_enable();
     return 0;
 }
