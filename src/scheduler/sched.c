@@ -63,3 +63,20 @@ uint32_t fork(uint64_t function, uint64_t priority, uint64_t arg)
     preempt_enable();
     return 0;
 }
+
+void reset_scheduler(void)
+{
+    // Free all allocated task pages except init_task
+    for (int i = 1; i < MAX_TASKS_NUMBER; i++)
+    {
+        if (scheduler->tasks[i] != 0 && scheduler->tasks[i] != &init_task)
+        {
+            free_page((uint64_t)scheduler->tasks[i]);
+            scheduler->tasks[i] = 0;
+        }
+    }
+
+    // Reset scheduler state
+    scheduler->current_task = &init_task;
+    scheduler->nr_tasks = 1;
+}

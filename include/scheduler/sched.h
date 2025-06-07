@@ -25,6 +25,7 @@ void preempt_disable(void);
 void preempt_enable(void);
 void schedule_tail(void);
 void ret_from_fork(void);
+void reset_scheduler(void);
 /**
  * used for creating a new task
  * @param function the function to run in the new task
