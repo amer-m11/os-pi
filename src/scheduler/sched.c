@@ -19,6 +19,7 @@ scheduler_struct *get_schedular(void)
 
 void init_scheduler(void)
 {
+    memzero((uint64_t)scheduler->tasks, MAX_TASKS_NUMBER);
     scheduler->tasks[0] = &init_task;
     scheduler->current_task = &init_task;
     scheduler->nr_tasks = 1;
