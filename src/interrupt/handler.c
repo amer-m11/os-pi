@@ -4,6 +4,7 @@
 #include "drivers/timer.h"
 #include "io/mini_uart.h"
 #include "regs/peripherals/auxiliaries.h"
+#include "scheduler/sched.h"
 #include "utils/printf.h"
 
 #include "regs/peripherals/irq.h"
@@ -61,6 +62,7 @@ void handle_irq(void)
         {
             irq &= ~TIMER_1_IRQ;
             timer1_handle_interrupt();
+            timer_tick();
         }
         else
         {

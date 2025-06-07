@@ -19,13 +19,15 @@ typedef struct
 // extern scheduler_struct *scheduler;
 
 task_struct *get_init_task(void);
-scheduler_struct *get_schedular(void);
+scheduler_struct *get_scheduler(void);
 void init_scheduler(void);
 void preempt_disable(void);
 void preempt_enable(void);
 void schedule_tail(void);
 void ret_from_fork(void);
 void reset_scheduler(void);
+void schedule(void);
+void timer_tick(void);
 /**
  * used for creating a new task
  * @param function the function to run in the new task

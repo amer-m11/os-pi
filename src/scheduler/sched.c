@@ -12,7 +12,7 @@ task_struct *get_init_task(void)
     return &init_task;
 }
 
-scheduler_struct *get_schedular(void)
+scheduler_struct *get_scheduler(void)
 {
     return scheduler;
 }
@@ -79,4 +79,29 @@ void reset_scheduler(void)
     // Reset scheduler state
     scheduler->current_task = &init_task;
     scheduler->nr_tasks = 1;
+}
+
+void schedule(void)
+{
+    scheduler_struct *sched = get_scheduler();
+
+    // Only operate on non-init tasks
+    if (sched->current_task != get_init_task())
+    {
+        if (sched->current_task->remaining_time > 0)
+        {
+            sched->current_task->remaining_time--;
+        }
+        else
+        {
+            // Reset time and switch task
+            sched->current_task->remaining_time = sched->current_task->priority;
+            // Will add task switching logic here
+        }
+    }
+}
+
+void timer_tick(void)
+{
+    schedule();
 }
