@@ -1,6 +1,7 @@
 #include "drivers/timer.h"
 #include "common.h"
 #include "regs/peripherals/timer.h"
+#include "scheduler/sched.h"
 #include "utils/printf.h"
 
 void timer1_init(void)
@@ -23,5 +24,5 @@ void timer1_handle_interrupt(void)
     printf("\r\nhandling timer1 interrupts\r\n");
     timer1_set_interval(TIMER_BASE_INTERVAL_CYCLES);
     timer1_clear_interrupt();
-    // TODO
+    scheduler_tick();
 }
