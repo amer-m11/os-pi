@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-#define TIMER_BASE_INTERVAL_CYCLES 20000000
+#define TIMER_BASE_INTERVAL_CYCLES 10000000
 
 /**
  * initializes the second of the four system timer interrupts (timer_1)

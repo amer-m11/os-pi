@@ -8,3 +8,8 @@ get_x16:
 set_x16:
     mov x16, x0
     ret
+
+.globl get_sp
+get_sp:
+    mov x0, sp
+    ret

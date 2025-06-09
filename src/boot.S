@@ -15,7 +15,9 @@ proc_hang:
 
 master:
 	adr	x0, bss_begin
-	adr	x1, bss_end
+	adrp x1, bss_end
+	add  x1, x1, :lo12:bss_end
+	// adr	x1, bss_end
 	sub	x1, x1, x0
 	bl 	memzero
 

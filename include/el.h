@@ -36,3 +36,4 @@ uint64_t get_scr_el3();
 uint64_t get_hcr_el2();
 uint64_t get_sctlr_el1();
 uint64_t get_spsr_el1();
+uint64_t get_elr_el1();

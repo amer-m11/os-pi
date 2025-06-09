@@ -80,4 +80,10 @@ void tfp_format(void *putp, void (*putf)(void *, char), char *fmt, va_list va);
 #define printf tfp_printf
 #define sprintf tfp_sprintf
 
+#ifdef DEBUG
+#define LOG(...) printf(__VA_ARGS__)
+#else
+#define LOG(...)
+#endif
+
 #endif
