@@ -11,6 +11,8 @@
 #include "regs/peripherals/timer.h"
 #include "scheduler/sched.h"
 #include "scheduler/task.h"
+#include "shell/input_stream.h"
+#include "shell/shell.h"
 #include "tests/tests.h"
 #include "utils.h"
 #include "utils/debug.h"
@@ -54,6 +56,15 @@ void configure_board_interrupt_configuration()
     printf("Done\r\n");
 }
 
+void setup_shell()
+{
+    printf("Setting up shell...");
+    // test_input_stream_struct();
+    // test_shell();
+    shell_init(get_shell(), get_input_stream(), "OS-Pi Shell");
+    printf("Done\r\n");
+}
+
 void setup_kernel(void)
 {
     setup_printf();
@@ -78,6 +89,8 @@ void setup_kernel(void)
     init_scheduler();
     test_scheduler();
     reset_scheduler();
+
+    setup_shell();
 
     printf("======= Kernel setup complete =======");
 }

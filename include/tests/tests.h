@@ -20,3 +20,7 @@ void test_global_scheduler_test(void);
 
 void test_fork_success_basic(void);
 void test_multiple_tasks_created_correctly(void);
+
+// shell tests
+void test_input_stream_struct(void);
+void test_shell(void);
