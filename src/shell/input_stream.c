@@ -1,26 +1,30 @@
 #include "shell/input_stream.h"
 #include "utils/buffer.h"
+#include "utils/printf.h"
 
-char input_buffer[STREAM_BUFFER_SIZE] = {'\0'};
-
-struct InputStream input_stream_object = {
-    .buffer = input_buffer, .index = 0, .buffer_size = STREAM_BUFFER_SIZE, .has_data = 0};
-
-struct InputStream *INPUT_STREAM = &input_stream_object;
+int64_t input_stream_space[STREAM_BUFFER_SIZE + 32];
+struct InputStream *INPUT_STREAM = (struct InputStream *)input_stream_space;
 
 void input_stream_init(struct InputStream *input_stream)
 {
-    zero_buffer(input_stream->buffer, input_stream->buffer_size);
+    input_stream->buffer_size = STREAM_BUFFER_SIZE;
     input_stream->index = 0;
+    input_stream->has_data = 0;
+    zero_buffer(input_stream->buffer, input_stream->buffer_size);
 }
 
-int write_char(struct InputStream *input_stream, char c)
+struct InputStream *get_input_stream(void)
+{
+    return INPUT_STREAM;
+}
+
+int write_char(struct InputStream *input_stream, char character)
 {
     if (input_stream->index < input_stream->buffer_size - 1)
     {
-        input_stream->buffer[input_stream->index++] = c;
+        input_stream->buffer[input_stream->index++] = character;
         input_stream->buffer[input_stream->index] = '\0';
-        if (c == '\n' || c == '\r')
+        if (character == '\n' || character == '\r')
         {
             input_stream->has_data = 1;
         }
