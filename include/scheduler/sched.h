@@ -8,6 +8,12 @@
 #define TASK_NEW_STATE 1
 #define TASK_RUNNING_STATE 2
 
+/*
+    The compiler keeps optimizing the ret_from_fork address returning the relative address
+    even when using the "volatile" keyword. This is a dirty workaround to get the absolute address
+*/
+#define REF_FROM_FORM_ADR ((uint64_t)ret_from_fork) + 0x80000
+
 typedef struct
 {
     task_struct *tasks[MAX_TASKS_NUMBER];
@@ -29,7 +35,6 @@ void ret_from_fork(void);
 void reset_scheduler(void);
 void schedule(void);
 void scheduler_tick(void);
-void yield(void); /* Voluntary scheduling */
 task_struct *pick_next_task(void);
 void context_switch(task_struct *next_task);
 void cpu_switch_to(uint64_t prev_pointer, uint64_t next_pointer);

@@ -1,6 +1,8 @@
 
 ARMGNU ?= aarch64-linux-gnu
 
+DEBUG ?= 0
+
 # remove -mgeneral-regs-only in case NEON registers are needed (context switch)
 COPS = -Wall -nostdlib -nostartfiles -ffreestanding -Iinclude -mgeneral-regs-only
 ASMOPS = -Iinclude -Isrc
@@ -33,6 +35,9 @@ kernel8.img: $(SRC_DIR)/linker.ld $(OBJ_FILES)
 	$(ARMGNU)-ld -T $(SRC_DIR)/linker.ld -o $(BUILD_DIR)/kernel8.elf  $(OBJ_FILES)
 	$(ARMGNU)-objcopy $(BUILD_DIR)/kernel8.elf -O binary kernel8.img
 
+
+debug: COPS += -DDEBUG
+debug: kernel8.img
 # -------------------------------------
 
 armstub/build/armstub_s.o: armstub/src/armstub.S

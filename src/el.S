@@ -80,3 +80,8 @@ el_entry:
 get_spsr_el1:
     mrs x0, spsr_el1
     ret
+
+.globl get_elr_el1
+get_elr_el1:
+    mrs x0, elr_el1
+    ret

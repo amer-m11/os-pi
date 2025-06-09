@@ -7,12 +7,6 @@
 
 task_struct init_task = INIT_TASK;
 
-/*
-    The compiler keeps optimizing the ret_from_fork address returning the relative address
-    even when using the "volatile" keyword. This is a dirty workaround to get the absolute address
-*/
-#define REF_FROM_FORM_ADR ((uint64_t)ret_from_fork) + 0x80000
-
 int64_t scheduler_space[1024];
 scheduler_struct *scheduler = (scheduler_struct *)scheduler_space;
 
@@ -97,22 +91,23 @@ void scheduler_tick(void)
     task_struct *current = scheduler->current_task;
     current->remaining_time--;
 
-    printf("[scheduler_tick] current task (%d), remaining time: %d, disable preemption? %d\n\r",
-           current->id, current->remaining_time, current->disable_preemption);
+    LOG("[scheduler_tick] current task (%d), remaining time: %d, disable preemption? %d\n\r",
+        current->id, current->remaining_time, current->disable_preemption);
 
     if (current->disable_preemption)
     {
         return;
     }
 
-    printf("[scheduler_tick] preemption enabled for task %d\n\r", current->id);
+    LOG("[scheduler_tick] preemption enabled for task %d\n\r", current->id);
+    LOG("[scheduler_tick] preemption enabled for task %d\n\r", current->id);
 
     if (current->remaining_time > 0)
     {
         return;
     }
 
-    printf("[scheduler_tick] Task %d time expired, scheduling next task\n\r", current->id);
+    LOG("[scheduler_tick] Task %d time expired, scheduling next task\n\r", current->id);
 
     current->remaining_time = 0;
     enable_irq();
@@ -126,7 +121,7 @@ task_struct *pick_next_task(void)
     task_struct *next = 0;
     uint64_t highest_priority = 0;
 
-    printf("[pick_next_task] Picking next task from %d tasks\n\r", scheduler->nr_tasks);
+    LOG("[pick_next_task] Picking next task from %d tasks\n\r", scheduler->nr_tasks);
 
     // First pass: Find highest priority ready task
     while (1)
@@ -139,8 +134,8 @@ task_struct *pick_next_task(void)
                 continue;
             }
 
-            printf("[pick_next_task] Considering task %d: priority %d, time %d\n\r", i,
-                   task->priority, task->remaining_time);
+            LOG("[pick_next_task] Considering task %d: priority %d, time %d\n\r", i, task->priority,
+                task->remaining_time);
 
             if (task->remaining_time > 0 && task->priority > highest_priority)
             {
@@ -151,42 +146,31 @@ task_struct *pick_next_task(void)
 
         if (next)
         {
-            printf("[pick_next_task] Selected task %d (priority %d)\n\r", next->id, next->priority);
+            LOG("[pick_next_task] Selected task %d (priority %d)\n\r", next->id, next->priority);
             return next;
         }
 
         // If none found with time, recharge and pick highest priority
-        printf("[pick_next_task] No tasks with time, recharging...\n\r");
+        LOG("[pick_next_task] No tasks with time, recharging...\n\r");
         for (int i = 0; i < scheduler->nr_tasks; i++)
         {
             task_struct *task = scheduler->tasks[i];
             if (task)
             {
                 task->remaining_time = task->priority;
-                printf("[pick_next_task] Recharged task %d to %d\n\r", i, task->remaining_time);
+                LOG("[pick_next_task] Recharged task %d to %d\n\r", i, task->remaining_time);
             }
         }
     }
 }
 
-// Simplified yield that forces schedule
-void yield(void)
-{
-    printf("[yield] Called by task %p\n", scheduler->current_task);
-    schedule();
-}
-
 void schedule(void)
 {
-    // if (scheduler->current_task->disable_preemption)
-    // {
-    //     return;
-    // }
-    printf("[schedule] Scheduling from task %d\n\r", scheduler->current_task->id);
+    LOG("[schedule] Scheduling from task %d\n\r", scheduler->current_task->id);
     preempt_disable();
     task_struct *next = pick_next_task();
     context_switch(next);
-    printf("[schedule] Switched to task %d\n\r", next->id);
+    LOG("[schedule] Switched to task %d\n\r", next->id);
     preempt_enable();
 }
 
@@ -199,19 +183,7 @@ void context_switch(task_struct *next_task)
 
     uint64_t prev = (uint64_t)scheduler->current_task;
 
-    printf("[context_switch] SWITCH: %d -> %d\n\r", scheduler->current_task->id, next_task->id);
-    set_x16((uint64_t)scheduler->current_task);
-    printf("[context_switch] x8 (current rask before update): 0x%x (prev task address)\n\r",
-           get_x16());
-    set_x16(prev);
-    printf("[context_switch] x8 (prev): 0x%x (prev task address)\n\r", get_x16());
-
+    LOG("[context_switch] SWITCH: %d -> %d\n\r", scheduler->current_task->id, next_task->id);
     scheduler->current_task = next_task;
-
-    set_x16((uint64_t)scheduler->current_task);
-    printf("[context_switch] x8 (next): 0x%x (prev task address)\n\r", get_x16());
-
     cpu_switch_to(prev, (uint64_t)next_task);
-
-    printf("[context_switch] x8 (after switch): 0x%x (prev task address)\n\r", get_x16());
 }
