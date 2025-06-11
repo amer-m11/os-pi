@@ -7,6 +7,7 @@
 #define MAX_TASKS_NUMBER 16
 #define TASK_NEW_STATE 1
 #define TASK_RUNNING_STATE 2
+#define TASK_FINISHED_STATE 3
 
 /*
     The compiler keeps optimizing the ret_from_fork address returning the relative address

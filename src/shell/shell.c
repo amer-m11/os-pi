@@ -1,5 +1,6 @@
 #include "shell/shell.h"
 #include "common.h"
+#include "demo.h"
 #include "utils/buffer.h"
 #include "utils/printf.h"
 
@@ -50,6 +51,7 @@ int run_shell_command(struct Shell *shell, const char *command)
         printf("  help - Show this help message\r\n");
         printf("  ping - Respond with 'pong' (debugging)\r\n");
         printf("  tictac - Start the Tic Tac Toe game\r\n");
+        printf("  multitask - showcases running two counting tasks concurrently\r\n");
     }
     else if (string_equals(command, "clear"))
     {
@@ -64,6 +66,11 @@ int run_shell_command(struct Shell *shell, const char *command)
     {
         // Return a special code to indicate game mode
         return 1;
+    }
+    else if (string_equals(command, "multitask"))
+    {
+        printf("Running two tasks concurrently...\r\n");
+        test_running_two_tasks_in_parallel();
     }
     else
     {

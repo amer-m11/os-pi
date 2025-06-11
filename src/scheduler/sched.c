@@ -134,6 +134,12 @@ task_struct *pick_next_task(void)
                 continue;
             }
 
+            if (task->state == TASK_FINISHED_STATE)
+            {
+                LOG("[pick_next_task] Task %d is finished, skipping\n\r", i);
+                continue;
+            }
+
             LOG("[pick_next_task] Considering task %d: priority %d, time %d\n\r", i, task->priority,
                 task->remaining_time);
 
